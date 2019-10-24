@@ -72,7 +72,8 @@
 (global-set-key  (kbd "<C-tab>") 'ff-find-other-file)
 
 ;; Run compile script
-(setq compile-command "./build.sh")
+;;(setq compile-command "./build.sh")
+(setq compile-command "make")
 (global-set-key (kbd "<f5>") 'compile)
 
 ;; Show line numbers
