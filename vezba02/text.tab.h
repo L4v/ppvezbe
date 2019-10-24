@@ -46,8 +46,12 @@ extern int yydebug;
   enum yytokentype
   {
     DOT = 258,
-    CAPITAL_WORD = 259,
-    WORD = 260
+    QMARK = 259,
+    EMARK = 260,
+    COMMA = 261,
+    CAPITAL_WORD = 262,
+    WORD = 263,
+    NEWLINE = 264
   };
 #endif
 
