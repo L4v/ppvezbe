@@ -5,7 +5,7 @@
 
 %%
 
-[ \t]+    { /* skip */ }
+[ \t]+      { /* skip */ }
 \n+         { return NEWLINE; }
 
 "."         { return DOT; }

@@ -22,21 +22,22 @@
 
 %%
 
- /* OVO NE RADI :( */
+ /* Plagijat od Gergely Kis */
 
 text 
-: crippling_emptiness
-| text paragraph{Paragraphs++;}
+: paragraph
+| text paragraph
+| NEWLINE paragraph
 ;
 
-crippling_emptiness
-:
-| NEWLINE
-;
 
 paragraph
+: sentences NEWLINE {Paragraphs++;}
+;
+
+sentences
 : sentence
-| paragraph sentence
+| sentences sentence
 ;
 
 sentence
