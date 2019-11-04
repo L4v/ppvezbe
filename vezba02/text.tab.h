@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.4.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_TEXT_TAB_H_INCLUDED
 # define YY_YY_TEXT_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -46,12 +50,14 @@ extern int yydebug;
   enum yytokentype
   {
     DOT = 258,
-    QMARK = 259,
-    EMARK = 260,
+    EXCLAMATION_MARK = 259,
+    QUESTION_MARK = 260,
     COMMA = 261,
     CAPITAL_WORD = 262,
     WORD = 263,
-    NEWLINE = 264
+    NEWLINE = 264,
+    LPAREN = 265,
+    RPAREN = 266
   };
 #endif
 

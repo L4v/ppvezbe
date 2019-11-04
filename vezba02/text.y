@@ -4,55 +4,68 @@
   int yyparse(void);
   int yyerror(char *);
   extern int yylineno;
-  int ExclamationMarks = 0;
-  int QuestionMarks = 0;
+  int Questions = 0;
+  int Exclamations = 0;
+  int Statements = 0;
   int Paragraphs = 0;
+    
 %}
 
 %token  DOT
-%token  QMARK
-%token  EMARK
+%token  EXCLAMATION_MARK
+%token  QUESTION_MARK
 %token  COMMA
 %token  CAPITAL_WORD
 %token  WORD
 %token  NEWLINE
+%token  LPAREN RPAREN
 
 %%
 
 text 
-  : paragraph
-  | text paragraph
-  ;
-          
-paragraph 
-: sentence  {Paragraphs++;}
-| paragraph sentence {Paragraphs++;}
-| paragraph NEWLINE {Paragraphs++;}
+: crippling_emptiness
+| text paragraph NEWLINE {Paragraphs++;}
 ;
 
-sentence 
-: words
-| words QMARK {QuestionMarks++;}
-| words EMARK {ExclamationMarks++;}
-| words DOT
+crippling_emptiness
+:
+| NEWLINE
 ;
+
+paragraph
+: sentence
+| paragraph sentence
+;
+
+sentence
+  : words end
+  ;
+
 
 words 
   : CAPITAL_WORD
-  | words WORD
-  | words COMMA WORD
-  | words CAPITAL_WORD
-  | words COMMA CAPITAL_WORD
+  | words comma WORD
+  | words comma CAPITAL_WORD
   ;
+
+comma
+:
+| COMMA
+;
+
+end
+: DOT {Statements++;}
+| EXCLAMATION_MARK {Exclamations++;}
+| QUESTION_MARK {Questions++;}
 
 %%
 
 int main() {
   yyparse();
-  fprintf(stdout,
- "Broj upitnih: %d\nBroj uzvicnih: %d\nBroj pasusa:%d\n",
-	  QuestionMarks,
-	  ExclamationMarks,
+  fprintf(stdout,"Statements:%d\nQuestions:%d\nExclamations:%d\nParagraphs:%d\n",
+	  Statements,
+	  Questions,
+	  Exclamations,
 	  Paragraphs);
 }
 
