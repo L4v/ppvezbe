@@ -9,23 +9,23 @@ int abs(int i) {
 }
 
 int main() {
-
-  int d, s;
-
-  if(a < 5 && d > 5 && b <= 5)
+  int a;
+  int b, c,  d;
   a = 5;
 
-  do
-   a = 5;
-  while(a < 10);
+   do  
+     a = 5;
+   while(a < 5);
 
-  do{
-   a = 5;
-   greska = 1;}
-  while(a < 10);
+   do
+    {
+     a = 5;
+    }while(a < 5);
 
-  a++;
-  b = c + a++ - 5;
+    do{
+     a = 5;
+     a = 6;
+     }while(a < 5);
 
   return abs(-5);
 }

@@ -11,10 +11,7 @@
 %token _TYPE
 %token _IF
 %token _ELSE
-%token _DO
-%token _WHILE
 %token _RETURN
-%token _COMMA
 %token _ID
 %token _INT_NUMBER
 %token _UINT_NUMBER
@@ -25,8 +22,12 @@
 %token _ASSIGN
 %token _SEMICOLON
 %token _AROP
+%token _LOGOP
 %token _POSTINC
 %token _RELOP
+%token _DO
+%token _WHILE
+%token _COMMA
 
 %nonassoc ONLY_IF
 %nonassoc _ELSE
@@ -72,7 +73,6 @@ ids
 : _ID
 | ids _COMMA _ID
 ;
-
 statement_list
   : /* empty */
   | statement_list statement
@@ -81,6 +81,7 @@ statement_list
 statement
   : compound_statement
   | assignment_statement
+  | post_inc_statement
   | if_statement
   | return_statement
   | do_while_statement
@@ -94,6 +95,9 @@ assignment_statement
   : _ID _ASSIGN num_exp _SEMICOLON
   ;
 
+post_inc_statement
+: post_inc _SEMICOLON
+
 num_exp
   : exp
   | num_exp _AROP exp
@@ -106,6 +110,11 @@ exp
   | _LPAREN num_exp _RPAREN
   | post_inc
   ;
+
+log_exp
+: rel_exp _LOGOP rel_exp
+| log_exp _LOGOP rel_exp
+;
 
 post_inc
 : _ID _POSTINC
@@ -123,6 +132,7 @@ function_call
 argument
   : /* empty */
   | num_exp
+  | log_exp
   ;
 
 do_while_statement
@@ -130,12 +140,14 @@ do_while_statement
 ;
 
 if_statement
-  : if_part %prec ONLY_IF
+: if_part %prec ONLY_IF
+ /* %prec oznacava privr token */
   | if_part _ELSE statement
   ;
 
 if_part
   : _IF _LPAREN rel_exp _RPAREN statement
+  | _IF _LPAREN log_exp _RPAREN statement
   ;
 
 rel_exp

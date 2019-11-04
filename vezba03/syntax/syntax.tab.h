@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.4.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_SYNTAX_TAB_H_INCLUDED
 # define YY_YY_SYNTAX_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -48,24 +52,22 @@ extern int yydebug;
     _TYPE = 258,
     _IF = 259,
     _ELSE = 260,
-    _RETURN = 261,
-    _ID = 262,
-    _INT_NUMBER = 263,
-    _UINT_NUMBER = 264,
-    _LPAREN = 265,
-    _RPAREN = 266,
-    _LBRACKET = 267,
-    _RBRACKET = 268,
-    _ASSIGN = 269,
-    _SEMICOLON = 270,
-    _AROP = 271,
-    _LOGOP = 272,
-    _POSTINC = 273,
-    _RELOP = 274,
-    _DO = 275,
-    _WHILE = 276,
-    _COMMA = 277,
-    ONLY_IF = 278
+    _DO = 261,
+    _WHILE = 262,
+    _RETURN = 263,
+    _COMMA = 264,
+    _ID = 265,
+    _INT_NUMBER = 266,
+    _UINT_NUMBER = 267,
+    _LPAREN = 268,
+    _RPAREN = 269,
+    _LBRACKET = 270,
+    _RBRACKET = 271,
+    _ASSIGN = 272,
+    _SEMICOLON = 273,
+    _AROP = 274,
+    _RELOP = 275,
+    ONLY_IF = 276
   };
 #endif
 

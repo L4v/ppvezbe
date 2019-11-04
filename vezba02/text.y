@@ -22,9 +22,11 @@
 
 %%
 
+ /* OVO NE RADI :( */
+
 text 
 : crippling_emptiness
-| text paragraph NEWLINE {Paragraphs++;}
+| text paragraph{Paragraphs++;}
 ;
 
 crippling_emptiness
