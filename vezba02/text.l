@@ -5,17 +5,13 @@
 
 %%
 
-[ \t]+      { /* skip */ }
-\n+         { return NEWLINE; }
+"\n"        { return NL;}
+[ \t]+    { /* skip */ }
 
-"."         { return DOT; }
-"!"         { return EXCLAMATION_MARK; }
-"?"         { return QUESTION_MARK; }
 ","         { return COMMA; }
-
-"("         { return LPAREN; }
-")"         { return RPAREN; }
-
+"."         { return DOT; }
+"?"         { return QMARK; }
+"!"         { return EMARK; }
 [A-Z][a-z]* { return CAPITAL_WORD; }
 [a-z]+      { return WORD; }
                      

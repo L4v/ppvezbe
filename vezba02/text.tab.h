@@ -50,14 +50,12 @@ extern int yydebug;
   enum yytokentype
   {
     DOT = 258,
-    EXCLAMATION_MARK = 259,
-    QUESTION_MARK = 260,
+    QMARK = 259,
+    EMARK = 260,
     COMMA = 261,
-    CAPITAL_WORD = 262,
-    WORD = 263,
-    NEWLINE = 264,
-    LPAREN = 265,
-    RPAREN = 266
+    NL = 262,
+    CAPITAL_WORD = 263,
+    WORD = 264
   };
 #endif
 

@@ -11,10 +11,7 @@
 %token _TYPE
 %token _IF
 %token _ELSE
-%token _DO
-%token _WHILE
 %token _RETURN
-%token _COMMA
 %token _ID
 %token _INT_NUMBER
 %token _UINT_NUMBER
@@ -25,8 +22,13 @@
 %token _ASSIGN
 %token _SEMICOLON
 %token _AROP
-%token _POSTINC
 %token _RELOP
+%token _DO
+%token _WHILE
+%token _COMMA
+%token _POSTINC
+%token _LOP
+%token _FOR _STEP _NEXT _DIR
 
 %nonassoc ONLY_IF
 %nonassoc _ELSE
@@ -69,9 +71,9 @@ variable
   ;
 
 ids
-: _ID
-| ids _COMMA _ID
-;
+ : _ID
+ | ids _COMMA _ID
+ ;
 
 statement_list
   : /* empty */
@@ -82,9 +84,23 @@ statement
   : compound_statement
   | assignment_statement
   | if_statement
+  | do_statement
+  | for_statement
+  | inc_statement
   | return_statement
-  | do_while_statement
   ;
+
+inc_statement
+ : postinc _SEMICOLON
+ ;
+
+do_statement
+ : _DO statement _WHILE _LPAREN rel_exp _RPAREN _SEMICOLON
+ ;
+
+for_statement
+ : _FOR _ID _ASSIGN literal _DIR literal statement_list _NEXT _ID
+ | _FOR _ID _ASSIGN literal _DIR literal _STEP literal statement_list _NEXT _ID
 
 compound_statement
   : _LBRACKET statement_list _RBRACKET
@@ -102,14 +118,14 @@ num_exp
 exp
   : literal
   | _ID
+  | postinc
   | function_call
   | _LPAREN num_exp _RPAREN
-  | post_inc
   ;
 
-post_inc
-: _ID _POSTINC
-;
+postinc
+ : _ID _POSTINC
+ ;
 
 literal
   : _INT_NUMBER
@@ -125,18 +141,19 @@ argument
   | num_exp
   ;
 
-do_while_statement
-: _DO statement _WHILE _LPAREN rel_exp _RPAREN _SEMICOLON
-;
-
 if_statement
   : if_part %prec ONLY_IF
   | if_part _ELSE statement
   ;
 
 if_part
-  : _IF _LPAREN rel_exp _RPAREN statement
+  : _IF _LPAREN log_exp _RPAREN statement
   ;
+
+log_exp
+ : rel_exp _LOP rel_exp
+ | log_exp _LOP rel_exp
+ ;
 
 rel_exp
   : num_exp _RELOP num_exp

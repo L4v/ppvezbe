@@ -14,9 +14,20 @@
 "if"                 { return _IF; }
 "else"               { return _ELSE; }
 "return"             { return _RETURN; }
+
 "do"                 { return _DO; }
 "while"              { return _WHILE; }
-","                  { return _COMMA; }
+"for"                { return _FOR; }
+"step"               { return _STEP; }
+"next"               { return _NEXT; }
+"to"                 { return _DIR; }
+"downto"             { return _DIR; }
+","                  { return _COMMA; } 
+
+"++"                 { return _POSTINC; }
+
+"&&"                 { return _LOP; }
+"||"                 { return _LOP; }
 
 "("                  { return _LPAREN; }
 ")"                  { return _RPAREN; }
@@ -28,7 +39,6 @@
 "+"                  { return _AROP; }
 "-"                  { return _AROP; }
 
-"++"                 { return _POSTINC; }
 
 "<"                  { return _RELOP; }
 ">"                  { return _RELOP; }
