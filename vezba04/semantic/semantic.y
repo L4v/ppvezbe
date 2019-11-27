@@ -1,5 +1,6 @@
 %{
   #include <stdio.h>
+  #include <stdlib.h>
   #include "defs.h"
   #include "symtab.h"
 
@@ -16,7 +17,7 @@
   int fun_idx = -1;
   int fcall_idx = -1;
   int vartype;
-  int isfunc = 0;
+  int lit_idx;
 %}
 
 %union {
@@ -40,11 +41,10 @@
 %token <i> _AROP
 %token <i> _RELOP
 %token _COMMA
-%token <i> _POSTINC
+%token <i> _POST
+%token _DO _WHILE
 
- // NOTE(l4v): Pravila
-%type <i> type num_exp exp literal
-%type <i> function_call argument rel_exp
+%type <i> num_exp exp literal function_call argument rel_exp assignments
 
 %nonassoc ONLY_IF
 %nonassoc _ELSE
@@ -54,15 +54,9 @@
 program
   : function_list
       {  
-	// NOTE(l4v): Proveravamo da li main postoji
-	// u tabeli simbola (simtab)
-        int idx = lookup_symbol("main", FUN);
-        if(idx == -1)
+        if(lookup_symbol("main", FUN) == NO_INDEX)
           err("undefined reference to 'main'");
-        else 
-          if(get_type(idx) != INT)
-            warn("return type of 'main' is not int");
-      }
+       }
   ;
 
 function_list
@@ -70,13 +64,11 @@ function_list
   | function_list function
   ;
 
-
-// NOTE(l4v): $n, n-ti token u pravilu
 function
-  : type _ID
+  : _TYPE _ID
       {
         fun_idx = lookup_symbol($2, FUN);
-        if(fun_idx == -1)
+        if(fun_idx == NO_INDEX)
           fun_idx = insert_symbol($2, FUN, $1, NO_ATR, NO_ATR);
         else 
           err("redefinition of function '%s'", $2);
@@ -88,16 +80,11 @@ function
       }
   ;
 
-type
-  : _TYPE
-      { $$ = $1; }
-  ;
-
 parameter
   : /* empty */
       { set_atr1(fun_idx, 0); }
 
-  | type _ID
+  | _TYPE _ID
       {
         insert_symbol($2, PAR, $1, 1, NO_ATR);
         set_atr1(fun_idx, 1);
@@ -115,27 +102,25 @@ variable_list
   ;
 
 variable
-: type  {vartype = $1;} ids _SEMICOLON
+  : _TYPE {vartype = $1;}ids _SEMICOLON
   ;
 
 ids
-: _ID
-      {
-        if(lookup_symbol($1, VAR|PAR) == -1){
-           insert_symbol($1, VAR, vartype, ++var_num, NO_ATR);
-	}
-        else 
-           err("redefinition of '%s'", $1);
-      }
-| ids _COMMA _ID
-      {
-        if(lookup_symbol($3, VAR|PAR) == -1)
-           insert_symbol($3, VAR, vartype, ++var_num, NO_ATR);
-        else 
-           err("redefinition of '%s'", $3);
-      }
-;
-
+ : _ID
+ {
+   if(lookup_symbol($1, VAR|PAR) == NO_INDEX)
+     insert_symbol($1, VAR, vartype, ++var_num, NO_ATR);
+   else 
+     err("redefinition of '%s'", $1);
+ }
+ | ids _COMMA _ID
+ {
+   if(lookup_symbol($3, VAR|PAR) == NO_INDEX)
+     insert_symbol($3, VAR, vartype, ++var_num, NO_ATR);
+   else 
+     err("redefinition of '%s'", $3);
+ }
+ ;
 
 statement_list
   : /* empty */
@@ -147,6 +132,7 @@ statement
   | assignment_statement
   | if_statement
   | return_statement
+  | do_statement
   ;
 
 compound_statement
@@ -154,16 +140,29 @@ compound_statement
   ;
 
 assignment_statement
-  : _ID _ASSIGN num_exp _SEMICOLON
-      {
-        int idx = lookup_symbol($1, VAR|PAR);
-        if(idx == -1)
-          err("invalid lvalue '%s' in assignment", $1);
-        else
-          if(get_type(idx) != get_type($3))
-            err("incompatible types in assignment");
-      }
+  : assignments num_exp _SEMICOLON
+  {
+    if(get_type($1) != get_type($2))
+      err("incompatible types in assignment");
+  }
   ;
+
+assignments
+: _ID _ASSIGN
+{
+  $$ = lookup_symbol($1, VAR|PAR);
+  if($$ == NO_INDEX)
+    err("invalid lvalue '%s' in assignment", $1);
+}
+| assignments _ID _ASSIGN 
+{
+  if(get_type($1) == NO_INDEX)
+    err("invalid lvalue '%s' in assignment", $1);
+  else
+    if(get_type($1) != get_type(lookup_symbol($2, VAR|PAR)))
+      err("incompatible types in assignment");
+}
+;
 
 num_exp
   : exp
@@ -172,32 +171,28 @@ num_exp
         if(get_type($1) != get_type($3))
           err("invalid operands: arithmetic operation");
       }
- /*  | exp */
- /*  { */
- /*    if(lookup_symbol(get_name($1), VAR) != -1) */
- /*      {printf("Error, function can't be used with postinc");} */
- /*  } */
- /* _POSTINC; */
   ;
 
 exp
-: literal
-  | _ID 
+  : literal
+  | _ID
       {
         $$ = lookup_symbol($1, VAR|PAR);
-        if($$ == -1)
+        if($$ == NO_INDEX)
           err("'%s' undeclared", $1);
       }
-| _ID _POSTINC
-{
-  $$ = lookup_symbol($1, VAR|PAR);
-  if($$ == -1)
-    err("%s undeclared", $1);
-}
-| function_call
-| _LPAREN num_exp _RPAREN 
+  | function_call
+  | _LPAREN num_exp _RPAREN
       { $$ = $2; }
-  ;
+  | _ID _POST
+  {
+    $$ = lookup_symbol($1, VAR|PAR);
+    if($$ == -1)
+      {
+	err("Invalid post op");
+      }
+  }
+;
 
 literal
   : _INT_NUMBER
@@ -211,7 +206,7 @@ function_call
   : _ID 
       {
         fcall_idx = lookup_symbol($1, FUN);
-        if(fcall_idx == -1)
+        if(fcall_idx == NO_INDEX)
           err("'%s' is not a function", $1);
       }
     _LPAREN argument _RPAREN
@@ -241,6 +236,23 @@ if_statement
   : if_part %prec ONLY_IF
   | if_part _ELSE statement
   ;
+
+do_statement
+: _DO statement _WHILE _LPAREN _ID
+{
+  if(lookup_symbol($5, VAR|PAR) == -1)
+    {
+      err("%s doesn't exist", $5);
+    }
+}
+_RELOP literal _RPAREN _SEMICOLON
+{
+  if(get_type(lookup_symbol($5, PAR|VAR)) != get_type($8))
+    {
+      err("types don't match");
+    }
+}
+;
 
 if_part
   : _IF _LPAREN rel_exp _RPAREN statement
@@ -290,8 +302,8 @@ int main() {
     printf("\n%d error(s).\n", error_count);
 
   if(synerr)
-    return -1;
+    return -1; //syntax error
   else
-    return error_count;
+    return error_count; //semantic errors
 }
 

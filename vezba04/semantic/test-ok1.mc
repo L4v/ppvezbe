@@ -1,15 +1,8 @@
-//OPIS: ABS funkcija
-//RETURN: 5
-
-int abs(int i) {
-  int res;
-  if(i < 0)
-    res = 0 - i;
-  else 
-    res = i; 
-  return res;
-}
-
+//OPIS: jedna petlja
 int main() {
-  return abs(-5);
+    int a, b, c;
+    do
+      a = b = c = 0;
+    while (a < 100);
 }
+
