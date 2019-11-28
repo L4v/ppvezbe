@@ -25,7 +25,7 @@ int main() {
     unsigned w;
     unsigned uu;
     unsigned ww;
-
+   
     //poziv funkcije
     a = f(3);
    
