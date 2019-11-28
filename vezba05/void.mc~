@@ -1,0 +1,11 @@
+
+void ff(unsigned x) {
+    unsigned y;
+    return x + f2() - y;
+}
+
+int main() {
+    int a;
+    int b;
+    int aa;
+}

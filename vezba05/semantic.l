@@ -12,10 +12,12 @@
 
 "int"                { yylval.i = INT;  return _TYPE; }
 "unsigned"           { yylval.i = UINT; return _TYPE; }
+"void"               { yylval.i = VOID; return _TYPE; }  
 "if"                 { return _IF; }
 "else"               { return _ELSE; }
 "return"             { return _RETURN; }
-"void"               { yylval.i = VOID; return _TYPE;}
+"do"                 { return _DO; }
+"while"              { return _WHILE; } 
 
 "("                  { return _LPAREN; }
 ")"                  { return _RPAREN; }
@@ -26,10 +28,10 @@
 
 ","                  { return _COMMA; }
 
+"++"                 { return _POST; }
+
 "+"                  { yylval.i = ADD; return _AROP; }
 "-"                  { yylval.i = SUB; return _AROP; }
-
-"++"                 { return _POSTINC;}
 
 "<"                  { yylval.i = LT; return _RELOP; }
 ">"                  { yylval.i = GT; return _RELOP; }
