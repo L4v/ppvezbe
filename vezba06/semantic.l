@@ -22,6 +22,7 @@
 "case"               { return _CASE; }
 "default"            { return _DEFAULT; }
 "break"              { return _BREAK; }
+"for"                { return _FOR; }
 
 "("                  { return _LPAREN; }
 ")"                  { return _RPAREN; }

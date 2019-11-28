@@ -11,5 +11,10 @@ int main() {
     case 70: { x = 5;} break;
     default: x = 10;
   }
+
+  for (int i = 0; i < 5; i++)
+   for (int j = 0; j < 5; j++)
+    i = 5;
+    
   return x;
 }

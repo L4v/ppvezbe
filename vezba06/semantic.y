@@ -23,6 +23,7 @@
   int curr_block = 0;
   int switch_start;
   int case_el = 0;
+  int for_idx;
 %}
 
 %union {
@@ -50,6 +51,7 @@
 %token _DO _WHILE
 %token _SWITCH _CASE _DEFAULT _BREAK
 %token _COLON
+%token _FOR
 
 %type <i> num_exp exp literal function_call argument rel_exp assignments
 
@@ -178,6 +180,7 @@ statement
   | return_statement {returns++;}
   | do_statement
   | switch_statement
+  | for_statement
   ;
 
 compound_statement
@@ -292,6 +295,26 @@ if_statement
   | if_part _ELSE statement
   ;
 
+for_statement
+: _FOR _LPAREN _TYPE _ID
+{
+  $<i>$ = get_last_element();
+  int id_local = lookup_symbol($4, VAR|PAR);
+  if(id_local != -1)
+    {
+      err("already declared");
+    }
+  else
+    {
+      insert_symbol($4, VAR, $3, NO_ATR, NO_ATR);
+    }
+}
+_ASSIGN literal _SEMICOLON rel_exp _SEMICOLON _ID _POST _RPAREN statement
+{
+  clear_symbols($<i>5 + 1);
+}
+;
+
 switch_statement
 : _SWITCH { switch_start = get_last_element() + 1; } _LPAREN _ID _RPAREN _LBRACKET cases default_case _RBRACKET
 {
@@ -344,7 +367,6 @@ switch_case
   case_el++;
 }
 ;
-
 
 do_statement
 : _DO statement _WHILE _LPAREN _ID
