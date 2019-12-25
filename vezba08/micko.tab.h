@@ -63,10 +63,11 @@ extern int yydebug;
     _ASSIGN = 269,
     _SEMICOLON = 270,
     _AROP = 271,
-    _RELOP = 272,
-    _QMARK = 273,
-    _COLON = 274,
-    ONLY_IF = 275
+    _MULDIV = 272,
+    _RELOP = 273,
+    _QMARK = 274,
+    _COLON = 275,
+    ONLY_IF = 276
   };
 #endif
 
@@ -79,7 +80,7 @@ union YYSTYPE
   int i;
   char *s;
 
-#line 83 "micko.tab.h"
+#line 84 "micko.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

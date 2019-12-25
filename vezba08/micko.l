@@ -25,6 +25,8 @@
 
 "+"                  { yylval.i = ADD; return _AROP; }
 "-"                  { yylval.i = SUB; return _AROP; }
+"*"                  { yylval.i = MUL; return _MULDIV; }
+"/"                  { yylval.i = DIV; return _MULDIV; }
 
 ":"                  { return _COLON; }
 "?"                  { return _QMARK; }

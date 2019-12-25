@@ -41,6 +41,7 @@
 %token _ASSIGN
 %token _SEMICOLON
 %token <i> _AROP
+%token <i> _MULDIV
 %token <i> _RELOP
 %token _QMARK
 %token _COLON
@@ -51,6 +52,9 @@
 
 %nonassoc ONLY_IF
 %nonassoc _ELSE
+
+%left _AROP
+%left _MULDIV
 
 %%
 
@@ -161,12 +165,12 @@ assignment_statement
 num_exp
   : exp
 
-  | num_exp _AROP exp
+  | num_exp num_op exp
       {
         if(get_type($1) != get_type($3))
           err("invalid operands: arithmetic operation");
         int t1 = get_type($1);    
-        code("\n\t\t%s\t", ar_instructions[$2 + (t1 - 1) * AROP_NUMBER]);
+        code("\n\t\t%s\t", ar_instructions[$<i>2 + (t1 - 1) * AROP_NUMBER]);
         gen_sym_name($1);
         code(",");
         gen_sym_name($3);
@@ -178,6 +182,17 @@ num_exp
         set_type($$, t1);
       }
   ;
+
+num_op
+: _AROP
+{
+  $<i>$ = $1;
+}
+| _MULDIV
+{
+  $<i>$ = $1;
+}
+;
 
 exp
   : literal
