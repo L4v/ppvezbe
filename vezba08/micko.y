@@ -165,7 +165,23 @@ assignment_statement
 num_exp
   : exp
 
-  | num_exp num_op exp
+  | num_exp _AROP num_exp
+      {
+        if(get_type($1) != get_type($3))
+          err("invalid operands: arithmetic operation");
+        int t1 = get_type($1);    
+        code("\n\t\t%s\t", ar_instructions[$<i>2 + (t1 - 1) * AROP_NUMBER]);
+        gen_sym_name($1);
+        code(",");
+        gen_sym_name($3);
+        code(",");
+        free_if_reg($3);
+        free_if_reg($1);
+        $$ = take_reg();
+        gen_sym_name($$);
+        set_type($$, t1);
+      }
+  | num_exp _MULDIV exp
       {
         if(get_type($1) != get_type($3))
           err("invalid operands: arithmetic operation");
@@ -182,17 +198,6 @@ num_exp
         set_type($$, t1);
       }
   ;
-
-num_op
-: _AROP
-{
-  $<i>$ = $1;
-}
-| _MULDIV
-{
-  $<i>$ = $1;
-}
-;
 
 exp
   : literal

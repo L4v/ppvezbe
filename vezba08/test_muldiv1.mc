@@ -1,10 +1,7 @@
+// RETURN 25
 int main()
 {
 	int a;
-	int b;
-	int c;
-	b = 4;
-	c = 2;
-	a = b * c;
+	a = 5 + 4 * 5;
 	return a;
 }
